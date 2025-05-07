@@ -1,0 +1,50 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load Excel file
+file_path = 'Marks_secC.xlsx'  # Change path if needed
+df = pd.read_excel(file_path)
+
+# Rename columns for clarity
+df.columns = ['Roll No', 'Name', 'Email', 'Batch', 'Timestamp', 'Status', 'Marks', 'Valid']
+
+# Drop rows without marks
+df = df.dropna(subset=['Marks'])
+
+# Calculate percentage
+df['Percentage'] = (df['Marks'] / 15) * 100
+
+# Categorize students
+greater_than_75 = df[df['Percentage'] > 75]
+between_60_75 = df[(df['Percentage'] >= 60) & (df['Percentage'] <= 75)]
+less_than_60 = df[df['Percentage'] < 60]
+
+# Print categorized results
+print("Students with >75%:")
+print(greater_than_75[['Name', 'Percentage']], '\n')
+
+print("Students with 60%-75%:")
+print(between_60_75[['Name', 'Percentage']], '\n')
+
+print("Students with <60%:")
+print(less_than_60[['Name', 'Percentage']], '\n')
+
+# Histogram Plot
+plt.figure(figsize=(8, 5))
+plt.hist(df['Percentage'], bins=range(0, 101, 5), edgecolor='black', color='blue')
+plt.xlabel('Percentage')
+plt.ylabel('Number of Students')
+plt.title('Histogram Plot')
+plt.grid(True, linestyle='--', alpha=0.5)
+plt.tight_layout()
+plt.show()
+
+# Scatter Plot
+plt.figure(figsize=(10, 5))
+plt.scatter(range(len(df)), df['Percentage'], color='blue', edgecolors='black')
+plt.xlabel('Students')
+plt.ylabel('Percentage')
+plt.title('Scatter Plot')
+plt.grid(True, linestyle='--', alpha=0.5)
+plt.tight_layout()
+plt.show()
